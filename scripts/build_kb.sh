@@ -18,8 +18,7 @@ python3 scripts/kb_scripts/prepare_kb.py "${PWD%/[^/]*}" $PREPARED_KB $REPO_PATH
 
 
 if [[ -f ${ERRORS_FILE} && ! ( -s ${ERRORS_FILE} )]]; then
-  ./bin/sc-builder -f -c -i $PREPARED_KB/$REPO_PATH_FILE -o kb.bin -s config/sc-web.ini -e ./bin/extensions
+  ./bin/sc-builder -f -c -i $PREPARED_KB/$REPO_PATH_FILE -o ./kb.bin -s ./config/sc-web.ini -e ./bin/extensions
   rm "$ERRORS_FILE"
-  rm prepare_kb
+  rm -rf prepared_kb
 fi
-
