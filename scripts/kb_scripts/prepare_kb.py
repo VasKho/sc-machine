@@ -35,12 +35,13 @@ def create_path(ext_path: str, int_path: str) -> str:
     return os.path.join(ext_path, os.path.split(int_path)[1])
 
 
-def main(ostis_path: str, copy_kb_name: str, repo_path_name: str, errors_file_path: str):
-    path_to_copy_kb = create_path(ostis_path, copy_kb_name)
+def main(sc_machine_path: str, copy_kb_name: str, repo_path_name: str, errors_file_path: str):
+    sc_machine_config = os.path.join(sc_machine_path, "config")
+    path_to_copy_kb = create_path(sc_machine_path, copy_kb_name)
     if os.path.isdir(path_to_copy_kb):
         shutil.rmtree(path_to_copy_kb)
     os.mkdir(path_to_copy_kb)
-    path_to_root_repo_path = create_path(ostis_path, repo_path_name)
+    path_to_root_repo_path = create_path(sc_machine_config, repo_path_name)
     path_to_repo_path = create_path(path_to_copy_kb, repo_path_name)
     path_to_prepared_repo_path = create_path(path_to_copy_kb, Tokens.PREPARED_FILE_PREFIX.value + repo_path_name)
 
@@ -58,7 +59,7 @@ def main(ostis_path: str, copy_kb_name: str, repo_path_name: str, errors_file_pa
                         if not is_need_to_prepare:
                             prepared_repo_path_file.write(line + '\n')
                         elif is_need_to_prepare:
-                            copy_path(ostis_path, path_to_copy_kb, line)
+                            copy_path(sc_machine_path, path_to_copy_kb, line)
                             repo_path_file.write(
                                 os.path.join(copy_kb_name, line.replace('../', '')) + '\n'
                             )
@@ -71,7 +72,7 @@ def main(ostis_path: str, copy_kb_name: str, repo_path_name: str, errors_file_pa
         with open(path_to_repo_path, mode='w') as repo_path_file:
             for line in prepared_repo_path_file:
                 line = line.replace('\n', '')
-                copy_path(ostis_path, path_to_copy_kb, line)
+                copy_path(sc_machine_path, path_to_copy_kb, line)
                 repo_path_file.write(
                     os.path.join(copy_kb_name, line.replace('../', '')) + '\n'
                 )
