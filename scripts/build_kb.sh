@@ -14,7 +14,7 @@ if [ ! -d "./kb.bin" ]; then
     mkdir ./kb.bin
 fi
 
-python3 scripts/kb_scripts/prepare_kb.py "${PWD%/[^/]*}" $PREPARED_KB $REPO_PATH_FILE "$ERRORS_FILE"
+python3 scripts/kb_scripts/prepare_kb.py ${PWD} $PREPARED_KB $REPO_PATH_FILE "$ERRORS_FILE"
 
 
 if [[ -f ${ERRORS_FILE} && ! ( -s ${ERRORS_FILE} )]]; then
