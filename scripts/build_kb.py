@@ -54,12 +54,12 @@ def prepare_kb(kb_to_prepare: str, logfile: str):
         exit(1)
 
 
-def build_kb(kb_to_build: str, repo_filename: str):
+def build_kb(kb_to_build: str):
     bin_folder = join(os.getcwd(), "kb.bin")
     os.makedirs(bin_folder, exist_ok=True)
     os.environ['LD_LIBRARY_PATH'] = join(ostis_path, "/bin")
     #call sc-builder with required parameters
-    os.system(" ".join([ostis_path, "bin/sc_builder", "-f", "-c", "-i", join(kb_to_build, repo_filename), "-o", bin_folder, "-s", join(ostis_path, "config/sc-web.ini"), "-e", join(ostis_path, "bin/extensions")]))
+    os.system(" ".join([join(ostis_path, "bin/sc-builder"), "-f", "-c", "-i", kb_to_build, "-o", bin_folder, "-s", join(ostis_path, "config/sc-web.ini"), "-e", join(ostis_path, "bin/extensions")]))
 
 
 def main(root_repo_path: str, output_path: str, logfile: str, repo_filename: str):
@@ -79,7 +79,8 @@ def main(root_repo_path: str, output_path: str, logfile: str, repo_filename: str
 
     copy_kb(output_path)
     prepare_kb(kb_to_prepare, logfile)
-    build_kb(kb_to_prepare, repo_filename)
+    build_kb(kb_to_prepare)
+    shutil.rmtree(kb_to_prepare)
 
 
 if __name__ == '__main__':
