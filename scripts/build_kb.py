@@ -46,6 +46,30 @@ def copy_kb(output_path: str):
         print(e)
 
 
+def parse_config(path: str):
+    config_dict = {'src': '', 'path': '', 'log': '', 'filename': ''}
+    with open(path, mode='r') as config:
+        for line in config.readlines():
+            line = line.replace('\n', '')
+            if line.startswith('#'):
+                continue
+            # if line.find('../') != -1:
+            #     print(f"Config parsing error in line '{line}'")
+            #     print("Use only absolute paths!")
+            #     continue
+            if line.find("Source = ") != -1:
+                config_dict.update({'src': line.replace('Source = ', '')})
+            if line.find("Path = ") != -1:
+                line = line.replace("Path = ", "")
+                line = line.replace('kb.bin', '')
+                config_dict.update({'path': line})
+            if line.find("Log = ") != -1:
+                config_dict.update({'log': line.replace("Log = ", "")})
+            if line.find("Filename = ") != -1:
+                config_dict.update({'filename': line.replace("Filename = ", "")})
+    return config_dict
+
+
 def prepare_kb(kb_to_prepare: str, logfile: str):
     for script in prepare_scripts:
         os.system('python3 ' + script + ' ' + kb_to_prepare + ' ' + logfile)
@@ -62,10 +86,22 @@ def build_kb(kb_to_build: str):
     os.system(" ".join([join(ostis_path, "bin/sc-builder"), "-f", "-c", "-i", kb_to_build, "-o", bin_folder, "-s", join(ostis_path, "config/sc-web.ini"), "-e", join(ostis_path, "bin/extensions")]))
 
 
-def main(root_repo_path: str, output_path: str, logfile: str, repo_filename: str):
-    root_repo_path = abspath(root_repo_path)
-    output_path = abspath(output_path)
-    logfile = abspath(logfile)
+def main(root_repo_path: str, output_path: str, logfile: str, repo_filename: str, config_file_path: str):
+    conf = parse_config(config_file_path)
+    if conf['src'] == '': 
+        root_repo_path = abspath(root_repo_path)
+    else:
+        root_repo_path = abspath(conf['src'])
+    if conf['path'] == '':
+        output_path = abspath(output_path)
+    else:
+        output_path = abspath(conf['path'])
+    if conf['log'] == '':
+        logfile = abspath(logfile)
+    else:
+        logfile = abspath(conf['log'])
+    if conf['filename'] != '':
+        repo_filename = conf['filename']
 
     kb_to_prepare = join(output_path, "prepared_kb")
     if isdir(kb_to_prepare):
@@ -98,7 +134,12 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--filename', dest="repo_path_name",
                         help="Repo file name - a filename for repo file that will be used in all subsequent KBs. Default: repo.path", default="repo.path")
 
+    parser.add_argument('-c', '--config', dest='config_file_path',
+                        help="Config file path - path to config file (Note: config file has higher priority than flags!)")
+
     args = parser.parse_args()
 
     main(args.repo_folder, args.output_path,
-         args.errors_file_path, args.repo_path_name)
+         args.errors_file_path, args.repo_path_name, args.config_file_path)
+    # TODO: make repo_folder flag optional, cause config file might contain it
+    #       fix config parsing function (there are same names for different options in sc-web.ini)
