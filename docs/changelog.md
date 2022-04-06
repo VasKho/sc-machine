@@ -10,6 +10,9 @@
  - **Web**
     - Moved React web interface in a separate [new repository.](https://github.com/ostis-ai/react-sc-web-ui-template)
 
+ - **Tools**
+    - Add build_kb
+
 ## v0.6.0
 
  - **Build system**:
