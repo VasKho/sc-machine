@@ -67,7 +67,6 @@ try
     return 0;
   }
 
-
   std::atomic_bool isRun = { true };
   utils::ScSignalHandler::Initialize();
   utils::ScSignalHandler::m_onTerminate = [&isRun]() {

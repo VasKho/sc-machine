@@ -1,18 +1,20 @@
 #include <iostream>
-#include <string>
-#include <set>
-#include <sstream>
-#include <exception>
 #include <fstream>
 
+#include <boost/filesystem.hpp>
+#include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/config.hpp>
 #include <boost/program_options/detail/config_file.hpp>
 #include <boost/program_options/parsers.hpp>
 
 namespace pod = boost::program_options::detail;
+namespace fs = boost::filesystem;
+namespace dll = boost::dll;
 
 std::map<std::string, std::string> parse_config(std::string conf) 
-{  
+{
+    fs::path ostis_root = dll::program_location().remove_filename().parent_path();
+
     std::ifstream config(conf);
     if(!config)
     {
@@ -28,8 +30,8 @@ std::map<std::string, std::string> parse_config(std::string conf)
     {      
         for (pod::config_file_iterator i(config, options), e; i != e; ++i)
         {
-	    if (i->string_key == "Repo.Path") result.insert({"path", i->value[0]});
-	    if (i->string_key == "Extensions.Directory") result.insert({"ext", i->value[0]});
+	    if (i->string_key == "Repo.Path") result.insert({"path", (ostis_root/i->value[0]).string()});
+	    if (i->string_key == "Extensions.Directory") result.insert({"ext", (ostis_root/i->value[0]).string()});
         }
     }
     catch(std::exception& e)    
