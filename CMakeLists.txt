@@ -135,9 +135,9 @@ elseif (${UNIX})
 
     getLibVersion(libboost-python-dev BOOST_PYTHON_VER)
     if ("${BOOST_PYTHON_VER}" STRGREATER "1.71")
-        find_package(Boost 1.54 REQUIRED COMPONENTS filesystem python${PY_SHORT_VERSION})
+        find_package(Boost 1.54 REQUIRED COMPONENTS filesystem python${PY_SHORT_VERSION} program_options)
     else ()
-        find_package(Boost 1.54 REQUIRED COMPONENTS filesystem python-py${PY_SHORT_VERSION})
+        find_package(Boost 1.54 REQUIRED COMPONENTS filesystem python-py${PY_SHORT_VERSION} program_options)
     endif()
     find_package(RocksDB REQUIRED)
 
