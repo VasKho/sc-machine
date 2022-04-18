@@ -45,10 +45,10 @@ make
 
 ## Build knowledge base
 
-This repo provides *build_kb.py* script to build and prepare knowledge base (KB).
+This repo provides *build_kb.py* script to prepare and build knowledge base (KB).
 
 ### Usage
-`python3 scripts/build_kb.py -i <path/to/KB/folder> -o <path/to/output/dir>`
+`python3 scripts/build_kb.py <path/to/KB/folder> -o <path/to/output/dir>`
 Additionally you can define repo file name (`-f <name>`), logfile location (`-l <path/to/logfile/dir>`) or config file path
 (`-c <path/to/config/file>`).
 To get more information, use `python3 scripts/build_kb.py -h`
@@ -76,8 +76,10 @@ python3 scripts/build_kb.py ./ -o ../ -f repo.path -l ./
 
 sc-machine provides two network protocols to interact with:
 
-1. **sc-server**: use `./sctipts/run_sc_sever.sh` script to run sc-server
-2. **sctp server**: use `./sctipts/run_sctp.sh` script to run sctp server
+1. **sc-server**: use `python3 sctipts/run_sc_sever.py -c <path/to/config/file>` to run sc-server.
+  To get more information, use `python3 scripts/run_sc_server.py -h`
+2. **sctp server**: use `python3 sctipts/run_sctp.py -c <path/to/config/file>` to run sctp server.
+  To get more information, use `python3 scripts/run_sctp.py -h`
 
 ## Config
 
@@ -85,10 +87,9 @@ To customize *sc-machine* usage you can create your own config file.
 
 Allowed options:
 1. [Network]
-  - `Port` - port for redis connection
+  - `Port` - port for sctp connection
 2. [Repo]
-  - `Source` - directory containing repo file
-  - `Log` - directory where error log file will be stored
+  - `Logfile` - directory where error log file will be stored
   - `Path` - path to compiled knowledge base folder
   - `SavePeriod` - time before KB save
 3. [Extensions]
@@ -105,7 +106,7 @@ Allowed options:
 8. [redis]
   - `host` - host of redis 
 9. [python]
-  - `modules_path` - path to `sc-kpm/sc-python/services`
+  - `modules_path` - path to `<path/to/python/modules>`
 10. [debug]
   - `is_debug` - debug mode enable (True|False)
 
@@ -114,7 +115,6 @@ Allowed options:
 [Network]
 Port = 55770
 [Repo]
-Source = ./
 Logfile = ./
 Path = ../kb.bin
 SavePeriod = 3600
@@ -141,7 +141,8 @@ modules_path = /sc-machine/sc-kpm/sc-python/services
 
 [debug]
 is_debug = True
-
 ```
+
+**Note: If you use relative paths they will be resolved based on config file location.**
 
 *This repository continues the development of [this sc-machine](https://github.com/ostis-dev/sc-machine) from version 0.6.0.*
