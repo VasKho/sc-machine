@@ -22,6 +22,12 @@
 #include <iostream>
 #include <sstream>
 
+#include <boost/dll.hpp>
+#include <boost/filesystem.hpp>
+
+namespace dl = boost::dll;
+namespace fs = boost::filesystem;
+
 extern "C"
 {
 #include <glib.h>
@@ -85,6 +91,7 @@ ScMemory::MemoryContextList ScMemory::ms_contexts;
 
 bool ScMemory::Initialize(sc_memory_params const & params)
 {
+  fs::path machine_root = dl::program_location().parent_path().parent_path();
   std::srand(unsigned(std::time(0)));
   gContextGounter = 0;
 
@@ -98,7 +105,7 @@ bool ScMemory::Initialize(sc_memory_params const & params)
   if (ms_globalContext == nullptr)
     return false;
 
-  py::ScPythonInterpreter::Initialize("sc-memory");
+  py::ScPythonInterpreter::Initialize("sc-memory", machine_root.string());
   sc_memory_init_ext(params.ext_path, params.enabled_exts);
 
   ScKeynodes::Init();

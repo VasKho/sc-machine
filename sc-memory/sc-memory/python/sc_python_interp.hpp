@@ -16,7 +16,7 @@ public:
   using ModulesMap = std::unordered_map<std::string, std::string>;
   using ModulePathSet = std::set<std::string>;
 
-  _SC_EXTERN static bool Initialize(std::string const & name);
+  _SC_EXTERN static bool Initialize(std::string const & name, std::string const & machine_root_path);
   _SC_EXTERN static void Shutdown();
 
   /* This function runs specified script. Path to script should be relative to
